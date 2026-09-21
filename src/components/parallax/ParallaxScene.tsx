@@ -3,10 +3,6 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import Image from "next/image";
 
-/** Overscan margin on the image layer, in vh, on top and bottom. Must be large
- * enough to cover the max clamp range used in the scroll handler below. */
-const BUFFER_VH = 45;
-
 export type SceneCta = {
   label: string;
   href: string;
@@ -32,7 +28,9 @@ export default function ParallaxScene({
   image,
   imagePriority = false,
   overlay = "dark",
-  speed = 0.35,
+  speed = 0.6,
+  maxZoom = 0.2,
+  maxPan = 100,
   panels,
   id,
   index,
@@ -47,8 +45,12 @@ export default function ParallaxScene({
   image?: string;
   imagePriority?: boolean;
   overlay?: "dark" | "light";
-  /** How fast the background image travels relative to the page scroll (0 = pinned, 1 = same speed as content). */
+  /** Pan strength, 0-1 (multiplies maxPan). */
   speed?: number;
+  /** Max zoom-in at the start of the scene, as a fraction (0.2 = 20%). Eases to 1 (no zoom) by the end. */
+  maxZoom?: number;
+  /** Max pan distance in px at the start of the scene. Eases to 0 by the end. */
+  maxPan?: number;
   /**
    * Multiple content panels sharing ONE continuous background image and ONE
    * parallax calculation — use this instead of stacking two ParallaxScene
@@ -98,17 +100,20 @@ export default function ParallaxScene({
       const el = sectionRef.current;
       const bg = bgRef.current;
       if (!el || !bg) return;
-      // rect.top moves 1:1 with scroll. Multiplying it by `speed` (< 1) makes the
-      // background travel a shorter distance than the page itself, so it visibly
-      // lags behind the content as the visitor scrolls — real differential-speed
-      // parallax, not a background-attachment:fixed pin.
-      // The image layer is overscanned by BUFFER_VH on each side (see className
-      // below); clamp the offset to that same range so the lag can never expose
-      // a bare edge at the top/bottom of the section.
+      // progress goes 0 -> 1 as the section travels through the viewport
+      // (0 = just entering at the bottom, 1 = fully scrolled past the top).
       const rect = el.getBoundingClientRect();
-      const buffer = window.innerHeight * (BUFFER_VH / 100);
-      const offset = Math.max(Math.min(rect.top * speed, buffer), -buffer);
-      bg.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
+      const vh = window.innerHeight || 1;
+      const total = rect.height + vh;
+      const progress = Math.min(Math.max((vh - rect.top) / total, 0), 1);
+
+      // Ken Burns-style settle: the image starts slightly zoomed in and pans,
+      // then eases to scale 1 / no offset exactly as the section finishes
+      // scrolling past — so it always ends up fully "in place", never left
+      // mid-drift. maxZoom is a fraction (0.2 = 20%), maxPan is in pixels.
+      const scale = 1 + maxZoom * (1 - progress);
+      const offset = (progress - 1) * maxPan * speed;
+      bg.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0) scale(${scale.toFixed(3)})`;
     }
 
     function onScroll() {
@@ -125,7 +130,7 @@ export default function ParallaxScene({
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [speed]);
+  }, [speed, maxZoom, maxPan]);
 
   const ctaClass = (variant: SceneCta["variant"]) => {
     if (variant === "ghost") {
@@ -143,7 +148,8 @@ export default function ParallaxScene({
     <section ref={sectionRef} className="relative overflow-hidden">
       <div
         ref={bgRef}
-        className="absolute inset-x-0 -top-[45vh] -bottom-[45vh] will-change-transform"
+        // 15vh overscan comfortably covers the default maxPan (100px * speed 0.6 = 60px max).
+        className="absolute inset-x-0 -top-[15vh] -bottom-[15vh] will-change-transform"
       >
         {image ? (
           <Image
