@@ -1,6 +1,5 @@
 import ParallaxScene from "@/components/parallax/ParallaxScene";
 import SectionRail from "@/components/parallax/SectionRail";
-import PlatformMockup from "@/components/parallax/PlatformMockup";
 import {
   IconBook,
   IconDocuments,
@@ -41,7 +40,7 @@ export default function ParallaxHome() {
       <ParallaxScene
         id="inicio"
         index="01"
-        image="/demo/livro.webp"
+        image="/parallax/hero.webp"
         imagePriority
         eyebrow="Algumas histórias"
         title={
@@ -60,7 +59,7 @@ export default function ParallaxHome() {
 
       <ParallaxScene
         index="02"
-        image="/demo/fotos.webp"
+        image="/parallax/desafio.webp"
         eyebrow="O desafio é real"
         title={
           <>
@@ -92,17 +91,16 @@ export default function ParallaxHome() {
       <ParallaxScene
         id="como-funciona"
         index="03"
-        overlay="light"
+        image="/parallax/solucao.webp"
         eyebrow="Tudo em um só lugar"
         title="Uma plataforma feita para a sua família."
         description="Organize, preserve e compartilhe o que realmente importa. Simples, intuitiva e segura."
         ctas={[{ label: "Ver como funciona", href: "#planos", variant: "secondary" }]}
-      >
-        <PlatformMockup />
-      </ParallaxScene>
+      />
 
       <ParallaxScene
         index="04"
+        image="/parallax/legado.webp"
         eyebrow="Mais que funcionalidades"
         title={
           <>
@@ -130,6 +128,7 @@ export default function ParallaxHome() {
       <ParallaxScene
         id="depoimentos"
         index="05"
+        image="/parallax/depoimentos.webp"
         overlay="light"
         eyebrow="Histórias reais"
         title="Famílias que já preservam o seu legado."
@@ -167,6 +166,7 @@ export default function ParallaxHome() {
       <ParallaxScene
         id="contato"
         index="06"
+        image="/parallax/encerramento.webp"
         align="center"
         eyebrow="O futuro agradece"
         title={
