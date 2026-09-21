@@ -339,13 +339,23 @@ export default function ParallaxScene({
                 >
                   {panel.eyebrow}
                 </p>
-                <h2
-                  className={`mt-4 text-4xl font-bold leading-[1.08] sm:text-5xl md:text-6xl ${
-                    isDark ? "text-white" : "text-title"
-                  }`}
-                >
-                  {panel.title}
-                </h2>
+                {panel.noReveal ? (
+                  <h1
+                    className={`mt-4 text-4xl font-bold leading-[1.08] sm:text-5xl md:text-6xl ${
+                      isDark ? "text-white" : "text-title"
+                    }`}
+                  >
+                    {panel.title}
+                  </h1>
+                ) : (
+                  <h2
+                    className={`mt-4 text-4xl font-bold leading-[1.08] sm:text-5xl md:text-6xl ${
+                      isDark ? "text-white" : "text-title"
+                    }`}
+                  >
+                    {panel.title}
+                  </h2>
+                )}
                 {panel.description && (
                   <p
                     className={`mt-5 max-w-xl text-lg ${isDark ? "text-white/85" : "text-body"} ${panel.noReveal ? "animate-fade-up" : ""}`}

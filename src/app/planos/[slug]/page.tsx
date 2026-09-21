@@ -24,8 +24,10 @@ export async function generateMetadata({
   const plan = PLANS.find((p) => p.id === slug);
   if (!plan) return {};
   return {
-    title: `${plan.name} — Legado Digital`,
+    title: plan.name,
     description: plan.tagline,
+    alternates: { canonical: `/planos/${plan.id}` },
+    openGraph: { title: `${plan.name} — Legado Digital`, description: plan.tagline },
   };
 }
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit, Public_Sans } from "next/font/google";
 import "./globals.css";
+import { SITE_URL } from "@/lib/site";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -14,10 +15,42 @@ const publicSans = Public_Sans({
   weight: ["400", "500", "600", "700"],
 });
 
+const TITLE = "Legado Digital — Preserve a história da sua família";
+const DESCRIPTION =
+  "Plataforma para preservar a história da sua família: organize fotos, histórias, documentos e árvore genealógica em um só lugar, com segurança e simplicidade.";
+
 export const metadata: Metadata = {
-  title: "Legado Digital — Preserve a história da sua família",
-  description:
-    "Uma plataforma segura e fácil de usar para guardar fotos, histórias, documentos e a árvore genealógica da sua família em um só lugar.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: TITLE,
+    template: "%s — Legado Digital",
+  },
+  description: DESCRIPTION,
+  keywords: [
+    "árvore genealógica",
+    "genealogia familiar",
+    "preservar história da família",
+    "organizar fotos de família",
+    "livro de família",
+    "memórias da família",
+    "plataforma de genealogia",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    url: SITE_URL,
+    siteName: "Legado Digital",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
+  twitter: {
+    card: "summary",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

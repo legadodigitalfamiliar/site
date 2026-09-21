@@ -5,6 +5,11 @@ export const SITE = {
   email: "legadodigitalfamiliar@gmail.com",
 };
 
+// Update once a custom domain (item 9 of the SEO checklist) is registered
+// and pointed at this project — everything reading SITE_URL (metadata,
+// robots.txt, sitemap.xml) picks up the change automatically.
+export const SITE_URL = "https://legadodigital.vercel.app";
+
 export function whatsappLink(message: string) {
   const text = encodeURIComponent(message);
   return `https://wa.me/${SITE.whatsapp}?text=${text}`;
