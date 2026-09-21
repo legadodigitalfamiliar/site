@@ -39,6 +39,7 @@ export default function ParallaxHome() {
 
       <ParallaxScene
         image="/parallax/hero.webp"
+        sticky
         zoom={0.25}
         imagePriority
         panels={[

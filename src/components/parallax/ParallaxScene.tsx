@@ -37,6 +37,7 @@ export default function ParallaxScene({
   imagePriority = false,
   overlay = "dark",
   zoom = 0.2,
+  sticky = false,
   panels,
   id,
   index,
@@ -58,9 +59,21 @@ export default function ParallaxScene({
    * full height — so a tall merged multi-panel scene doesn't force a much
    * bigger zoom than a short one. The image pans upward by exactly that
    * extra amount, reaching the full pan precisely when the section finishes
-   * scrolling past (text always scrolls at normal 100% speed).
+   * scrolling past (text always scrolls at normal 100% speed). Only used
+   * when `sticky` is false (the default pan mode).
    */
   zoom?: number;
+  /**
+   * Opt-in alternate mode: the image is `position: sticky` (pinned near
+   * the top of the viewport for as long as the section scrolls past, then
+   * releases cleanly at the section boundary) with a small `zoom`-fraction
+   * pan layered on top, instead of the default absolute-positioned pan.
+   * Use sparingly — this changes the underlying mechanism, not just the
+   * numbers, so only opt a scene in when it specifically needs the
+   * "practically pinned" feel (e.g. the hero). Leave every other scene on
+   * the default pan mode.
+   */
+  sticky?: boolean;
   /**
    * Multiple content panels sharing ONE continuous background image and ONE
    * parallax calculation — use this instead of stacking two ParallaxScene
@@ -111,28 +124,43 @@ export default function ParallaxScene({
       if (!el || !bg) return;
 
       const vh = window.innerHeight || 1;
-      // The image sits on `position: sticky` (handled in the className
-      // below), which is what actually keeps it pinned near the top of
-      // the viewport for the whole time the section is scrolling past —
-      // that part needs zero JS. On top of that resting position, this
-      // adds a small extra pan: the box is `zoom` fraction of a viewport
-      // taller than 100vh, and eases upward by exactly that extra amount
-      // as the section goes from just-reached-the-top (progress 0) to
-      // fully-scrolled-past (progress 1) — landing on the full pan
-      // exactly when the section ends, never before or after. zoom = 0
-      // means no extra height and no transform at all: fully still.
-      const extra = vh * zoom;
-      bg.style.height = `${vh + extra}px`;
-      bg.style.marginBottom = `${-(vh + extra)}px`;
 
-      if (zoom === 0 || reduced) {
-        bg.style.transform = "none";
+      if (sticky) {
+        // position: sticky (set in the className below) is what actually
+        // keeps the image pinned near the top of the viewport — that part
+        // needs zero JS. On top of that resting position, this adds a
+        // small extra pan: the box is `zoom` fraction of a viewport taller
+        // than 100vh, and eases upward by exactly that extra amount as the
+        // section goes from just-reached-the-top (progress 0) to
+        // fully-scrolled-past (progress 1). Sticky is in-flow (unlike
+        // absolute), so height/margin are also set here to reserve exactly
+        // zero net layout space regardless of `zoom`.
+        const extra = vh * zoom;
+        bg.style.height = `${vh + extra}px`;
+        bg.style.marginBottom = `${-(vh + extra)}px`;
+
+        if (zoom === 0 || reduced) {
+          bg.style.transform = "none";
+          return;
+        }
+
+        const rect = el.getBoundingClientRect();
+        const scrollSpan = Math.max(rect.height - vh, 1);
+        const progress = Math.min(Math.max(-rect.top / scrollSpan, 0), 1);
+        bg.style.transform = `translate3d(0, ${(-progress * extra).toFixed(1)}px, 0)`;
         return;
       }
 
+      if (reduced) return;
+
+      // Default pan mode: image is absolutely positioned (out of flow) and
+      // oversized relative to the whole section, panning across that extra
+      // height as the section scrolls past — see zoom's doc comment above.
       const rect = el.getBoundingClientRect();
       const scrollSpan = Math.max(rect.height - vh, 1);
       const progress = Math.min(Math.max(-rect.top / scrollSpan, 0), 1);
+      const extra = vh * zoom;
+      bg.style.height = `${rect.height + extra}px`;
       bg.style.transform = `translate3d(0, ${(-progress * extra).toFixed(1)}px, 0)`;
     }
 
@@ -144,14 +172,14 @@ export default function ParallaxScene({
     }
 
     update();
-    if (reduced) return;
+    if (reduced && sticky) return;
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [zoom]);
+  }, [zoom, sticky]);
 
   const ctaClass = (variant: SceneCta["variant"]) => {
     if (variant === "ghost") {
@@ -166,17 +194,24 @@ export default function ParallaxScene({
   const isDark = overlay === "dark";
 
   return (
-    <section ref={sectionRef} className="relative">
+    <section
+      ref={sectionRef}
+      // overflow-hidden clips the oversized pan-mode image layer, but it
+      // also breaks position:sticky (a non-scrolling overflow-hidden
+      // ancestor becomes the sticky containing block instead of the
+      // viewport) — so it's dropped entirely in sticky mode, which needs
+      // no clipping anyway (nothing sticks out past the viewport edges).
+      className={`relative ${sticky ? "" : "overflow-hidden"}`}
+    >
       <div
         ref={bgRef}
-        // position: sticky keeps the image pinned near the top of the
-        // viewport for as long as the section is scrolling past, then lets
-        // it scroll away with the page once the section ends. It's in-flow
-        // (unlike absolute), so the scroll handler above also sets an
-        // equal-and-opposite negative margin-bottom to cancel the space it
-        // would otherwise reserve — without that, its own height would
-        // push all of the panel content below it down by that same amount.
-        className="sticky top-0 w-full will-change-transform"
+        className={
+          sticky
+            ? "sticky top-0 w-full will-change-transform"
+            : // h-full is just the pre-hydration fallback; the scroll
+              // handler overrides it with an exact px height.
+              "absolute inset-x-0 top-0 h-full will-change-transform"
+        }
       >
         {image ? (
           <Image
