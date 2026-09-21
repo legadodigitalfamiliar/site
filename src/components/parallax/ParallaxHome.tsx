@@ -59,7 +59,7 @@ export default function ParallaxHome() {
 
       <ParallaxScene
         index="02"
-        image="/parallax/desafio.webp"
+        image="/parallax/hero.webp"
         eyebrow="O desafio é real"
         title={
           <>
