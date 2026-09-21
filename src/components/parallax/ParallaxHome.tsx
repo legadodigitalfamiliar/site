@@ -45,7 +45,11 @@ const MODULES = [
     href: "https://www.olsenbellotoleal.com.br/arvore.html?foco=bf01bfa2-d67d-4462-985a-5e573e631a43",
   },
   { icon: <IconPhotos />, label: "Fotos e álbuns", href: "https://www.olsenbellotoleal.com.br/galeria.html" },
-  { icon: <IconDocuments />, label: "Documentos" },
+  {
+    icon: <IconDocuments />,
+    label: "Documentos",
+    href: "https://www.olsenbellotoleal.com.br/livro.html?slug=livro-da-falilia",
+  },
   {
     icon: <IconBook />,
     label: "Histórias e livros",
@@ -54,8 +58,8 @@ const MODULES = [
   { icon: <IconLocation />, label: "Locais" },
   { icon: <IconTimeline />, label: "Linha do tempo", href: "https://www.olsenbellotoleal.com.br/timeline.html" },
   { icon: <IconPeople />, label: "Pessoas", href: "https://www.olsenbellotoleal.com.br/pessoas.html" },
-  { icon: <IconLink />, label: "Links externos" },
-  { icon: <IconMore />, label: "E muito mais" },
+  { icon: <IconLink />, label: "Links externos", href: "https://www.olsenbellotoleal.com.br/videos.html" },
+  { icon: <IconMore />, label: "E muito mais", href: "https://www.olsenbellotoleal.com.br" },
 ];
 
 export default function ParallaxHome() {
@@ -181,8 +185,8 @@ export default function ParallaxHome() {
           })}
         </div>
         <p className="mt-6 text-xs text-white/60">
-          * Árvore genealógica, Fotos e álbuns, Histórias e livros, Pessoas e Linha do tempo abrem um exemplo
-          funcional em outra aba.
+          * Árvore genealógica, Fotos e álbuns, Documentos, Histórias e livros, Linha do tempo, Pessoas, Links
+          externos e E muito mais abrem um exemplo funcional em outra aba.
         </p>
       </ParallaxScene>
 
