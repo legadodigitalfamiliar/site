@@ -248,6 +248,41 @@ export default function ParallaxScene({
         }`}
       />
 
+      {/*
+        Left-side reading fade: the text block always sits on the left
+        (or centered, where this still just darkens the side edges), so
+        darkening the left side of the photo specifically — independent of
+        the top-to-bottom overlay above — keeps text legible without
+        having to darken the whole image uniformly.
+      */}
+      <div
+        className={`absolute inset-y-0 left-0 w-full sm:w-2/3 ${
+          isDark
+            ? "bg-gradient-to-r from-title/60 via-title/15 to-transparent"
+            : "bg-gradient-to-r from-paper/70 via-paper/20 to-transparent"
+        }`}
+      />
+
+      {/*
+        Seam blend: each scene's photo is independent, so two different
+        images meeting at a section boundary is a hard cut with no
+        transition. These two strips fade each section's very top/bottom
+        edge to solid — not the same 45-80% translucent overlay above, but
+        fully opaque — so adjacent sections both fade to the same solid
+        color right at the seam and blend into it instead of visibly
+        cutting from one photo to another.
+      */}
+      <div
+        className={`absolute inset-x-0 top-0 h-10 sm:h-16 ${
+          isDark ? "bg-gradient-to-b from-title to-transparent" : "bg-gradient-to-b from-paper to-transparent"
+        }`}
+      />
+      <div
+        className={`absolute inset-x-0 bottom-0 h-10 sm:h-16 ${
+          isDark ? "bg-gradient-to-t from-title to-transparent" : "bg-gradient-to-t from-paper to-transparent"
+        }`}
+      />
+
       <div className="relative z-10">
         {resolvedPanels.map((panel) => (
           <div
