@@ -91,7 +91,14 @@ export default function ParallaxScene({
       },
     ];
 
+  // zoom = 0 means "pinned": the image just sticks to the top of the
+  // viewport for as long as the section is scrolling past (via CSS
+  // position: sticky), completely still, and only moves on with the page
+  // once the section ends — no JS transform loop needed at all.
+  const pinned = zoom === 0;
+
   useEffect(() => {
+    if (pinned) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
 
@@ -136,7 +143,7 @@ export default function ParallaxScene({
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [zoom]);
+  }, [zoom, pinned]);
 
   const ctaClass = (variant: SceneCta["variant"]) => {
     if (variant === "ghost") {
@@ -151,12 +158,28 @@ export default function ParallaxScene({
   const isDark = overlay === "dark";
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden">
+    <section
+      ref={sectionRef}
+      // overflow-hidden clips the oversized pan-mode image layer, but it
+      // also breaks position:sticky (an overflow-hidden ancestor that
+      // never scrolls internally becomes the sticky containing block,
+      // which then can't track the viewport) — so it must be dropped
+      // entirely in pinned mode, which needs no clipping anyway (the
+      // pinned image is exactly one viewport tall, never oversized).
+      className={`relative ${pinned ? "" : "overflow-hidden"}`}
+    >
       <div
         ref={bgRef}
-        // h-full is just the pre-hydration fallback; the scroll handler
-        // overrides it with an exact px height (section height + overscan).
-        className="absolute inset-x-0 top-0 h-full will-change-transform"
+        className={
+          pinned
+            ? // Pinned: stays put via native CSS sticky for the whole
+              // section — zero movement — then scrolls away with the page
+              // the instant the section ends.
+              "sticky top-0 h-screen w-full"
+            : // h-full is just the pre-hydration fallback; the scroll
+              // handler overrides it with an exact px height.
+              "absolute inset-x-0 top-0 h-full will-change-transform"
+        }
       >
         {image ? (
           <Image
