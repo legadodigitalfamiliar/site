@@ -191,7 +191,7 @@ export default function ParallaxScene({
             <div
               className={`mx-auto w-full max-w-6xl ${panel.align === "center" ? "text-center" : ""}`}
             >
-              <div className={`max-w-2xl ${panel.align === "center" ? "mx-auto" : ""}`}>
+              <div className={`scene-reveal max-w-2xl ${panel.align === "center" ? "mx-auto" : ""}`}>
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
                   {panel.eyebrow}
                 </p>
@@ -223,7 +223,9 @@ export default function ParallaxScene({
                   </div>
                 )}
               </div>
-              {panel.children && <div className="mt-12">{panel.children}</div>}
+              {panel.children && (
+                <div className="scene-reveal-children mt-12">{panel.children}</div>
+              )}
             </div>
           </div>
         ))}
