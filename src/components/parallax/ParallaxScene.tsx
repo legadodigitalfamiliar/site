@@ -38,6 +38,8 @@ export default function ParallaxScene({
   overlay = "dark",
   zoom = 0.2,
   sticky = false,
+  seamFade = true,
+  shadeBoost = false,
   panels,
   id,
   index,
@@ -74,6 +76,23 @@ export default function ParallaxScene({
    * the default pan mode.
    */
   sticky?: boolean;
+  /**
+   * Fade this scene's very top/bottom edge to a solid color so it blends
+   * into the neighboring scene at the boundary instead of cutting straight
+   * from one photo to another. Defaults on; turn off for a scene where the
+   * fade itself looks wrong — e.g. a `sticky` scene, where the fade's
+   * position is relative to the (very tall) section rather than to where
+   * the pinned image visually releases, so it can render as a stray solid
+   * bar instead of a blend.
+   */
+  seamFade?: boolean;
+  /**
+   * A small extra flat darkening over the whole photo, on top of the
+   * regular overlay — for a scene whose image is busy/detailed enough
+   * that text and cards need a touch more separation from it. Subtle by
+   * design (a light scrim, not a stronger version of the main overlay).
+   */
+  shadeBoost?: boolean;
   /**
    * Multiple content panels sharing ONE continuous background image and ONE
    * parallax calculation — use this instead of stacking two ParallaxScene
@@ -248,6 +267,10 @@ export default function ParallaxScene({
         }`}
       />
 
+      {shadeBoost && (
+        <div className={`absolute inset-0 ${isDark ? "bg-title/15" : "bg-paper/15"}`} />
+      )}
+
       {/*
         Left-side reading fade: the text block always sits on the left
         (or centered, where this still just darkens the side edges), so
@@ -270,18 +293,22 @@ export default function ParallaxScene({
         edge to solid — not the same 45-80% translucent overlay above, but
         fully opaque — so adjacent sections both fade to the same solid
         color right at the seam and blend into it instead of visibly
-        cutting from one photo to another.
+        cutting from one photo to another. Opt out per-scene via seamFade.
       */}
-      <div
-        className={`absolute inset-x-0 top-0 h-10 sm:h-16 ${
-          isDark ? "bg-gradient-to-b from-title to-transparent" : "bg-gradient-to-b from-paper to-transparent"
-        }`}
-      />
-      <div
-        className={`absolute inset-x-0 bottom-0 h-10 sm:h-16 ${
-          isDark ? "bg-gradient-to-t from-title to-transparent" : "bg-gradient-to-t from-paper to-transparent"
-        }`}
-      />
+      {seamFade && (
+        <>
+          <div
+            className={`absolute inset-x-0 top-0 h-10 sm:h-16 ${
+              isDark ? "bg-gradient-to-b from-title to-transparent" : "bg-gradient-to-b from-paper to-transparent"
+            }`}
+          />
+          <div
+            className={`absolute inset-x-0 bottom-0 h-10 sm:h-16 ${
+              isDark ? "bg-gradient-to-t from-title to-transparent" : "bg-gradient-to-t from-paper to-transparent"
+            }`}
+          />
+        </>
+      )}
 
       <div className="relative z-10">
         {resolvedPanels.map((panel) => (
@@ -297,7 +324,9 @@ export default function ParallaxScene({
               <div
                 className={`${panel.noReveal ? "" : "scene-reveal"} max-w-2xl ${panel.align === "center" ? "mx-auto" : ""}`}
               >
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+                <p
+                  className={`text-xs font-semibold uppercase tracking-[0.22em] text-gold ${panel.noReveal ? "animate-fade-up" : ""}`}
+                >
                   {panel.eyebrow}
                 </p>
                 <h2
@@ -308,12 +337,18 @@ export default function ParallaxScene({
                   {panel.title}
                 </h2>
                 {panel.description && (
-                  <p className={`mt-5 max-w-xl text-lg ${isDark ? "text-white/85" : "text-body"}`}>
+                  <p
+                    className={`mt-5 max-w-xl text-lg ${isDark ? "text-white/85" : "text-body"} ${panel.noReveal ? "animate-fade-up" : ""}`}
+                    style={panel.noReveal ? { animationDelay: "480ms" } : undefined}
+                  >
                     {panel.description}
                   </p>
                 )}
                 {panel.ctas && panel.ctas.length > 0 && (
-                  <div className="mt-8 flex flex-wrap gap-4">
+                  <div
+                    className={`mt-8 flex flex-wrap gap-4 ${panel.noReveal ? "animate-fade-up" : ""}`}
+                    style={panel.noReveal ? { animationDelay: "620ms" } : undefined}
+                  >
                     {panel.ctas.map((cta) => (
                       <a
                         key={cta.label}
@@ -329,7 +364,10 @@ export default function ParallaxScene({
                 )}
               </div>
               {panel.children && (
-                <div className={`${panel.noReveal ? "" : "scene-reveal-children"} mt-12`}>
+                <div
+                  className={`${panel.noReveal ? "animate-fade-up" : "scene-reveal-children"} mt-12`}
+                  style={panel.noReveal ? { animationDelay: "700ms" } : undefined}
+                >
                   {panel.children}
                 </div>
               )}

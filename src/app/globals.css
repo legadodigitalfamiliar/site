@@ -125,6 +125,45 @@ h4 {
   }
 }
 
+/* Per-word title reveal for scroll-triggered scenes (2-6). Fixed set of
+   staggered animation-range utilities (Hero uses the mount-time
+   .animate-word-up instead, since it's visible before any scroll). */
+.word-reveal {
+  opacity: 1;
+}
+
+@supports (animation-timeline: view()) {
+  .word-reveal {
+    opacity: 0;
+    animation: scene-fade-in linear both;
+    animation-timeline: view();
+  }
+  .word-reveal-0 {
+    animation-range: entry 0% entry 45%;
+  }
+  .word-reveal-1 {
+    animation-range: entry 6% entry 51%;
+  }
+  .word-reveal-2 {
+    animation-range: entry 12% entry 57%;
+  }
+  .word-reveal-3 {
+    animation-range: entry 18% entry 63%;
+  }
+  .word-reveal-4 {
+    animation-range: entry 24% entry 69%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word-reveal {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
 /* Section rail: a vertical progress line that fills with total page scroll. */
 .rail-progress-track {
   position: relative;

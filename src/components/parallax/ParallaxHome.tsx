@@ -1,5 +1,7 @@
 import ParallaxScene from "@/components/parallax/ParallaxScene";
 import SectionRail from "@/components/parallax/SectionRail";
+import TiltCard from "@/components/parallax/TiltCard";
+import AnimatedTitle from "@/components/parallax/AnimatedTitle";
 import {
   IconBook,
   IconDocuments,
@@ -41,6 +43,7 @@ export default function ParallaxHome() {
         image="/parallax/hero.webp"
         sticky
         zoom={0.25}
+        seamFade={false}
         imagePriority
         panels={[
           {
@@ -50,9 +53,17 @@ export default function ParallaxHome() {
             eyebrow: "Algumas histórias",
             title: (
               <>
-                Merecem
+                <span className="inline-block overflow-hidden pb-1 align-top">
+                  <span className="animate-word-up inline-block" style={{ animationDelay: "0ms" }}>
+                    Merecem
+                  </span>
+                </span>
                 <br />
-                continuar.
+                <span className="inline-block overflow-hidden pb-1 align-top">
+                  <span className="animate-word-up inline-block" style={{ animationDelay: "90ms" }}>
+                    continuar.
+                  </span>
+                </span>
               </>
             ),
             description:
@@ -70,21 +81,15 @@ export default function ParallaxHome() {
           {
             index: "02",
             eyebrow: "O desafio é real",
-            title: (
-              <>
-                Memórias que se
-                <br />
-                perdem com o tempo.
-              </>
-            ),
+            title: <AnimatedTitle lines={["Memórias que se", "perdem com o tempo."]} />,
             description:
               "Fotos espalhadas, histórias esquecidas, documentos em papel e conexões familiares difíceis de visualizar.",
             children: (
               <div className="grid max-w-3xl gap-3 sm:grid-cols-2">
                 {PROBLEMS.map((p) => (
-                  <div
+                  <TiltCard
                     key={p.title}
-                    className="flex items-start gap-3 rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm"
+                    className="flex items-start gap-3 rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm transition-shadow duration-300 hover:shadow-xl"
                   >
                     <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-white/15 text-white">
                       {p.icon}
@@ -93,7 +98,7 @@ export default function ParallaxHome() {
                       <p className="text-sm font-semibold text-white">{p.title}</p>
                       <p className="mt-0.5 text-xs text-white/75">{p.text}</p>
                     </div>
-                  </div>
+                  </TiltCard>
                 ))}
               </div>
             ),
@@ -106,7 +111,7 @@ export default function ParallaxHome() {
         index="03"
         image="/parallax/solucao.webp"
         eyebrow="Tudo em um só lugar"
-        title="Uma plataforma feita para a sua família."
+        title={<AnimatedTitle lines={["Uma plataforma feita para a sua família."]} />}
         description="Organize, preserve e compartilhe o que realmente importa. Simples, intuitiva e segura."
         ctas={[{ label: "Ver como funciona", href: "#planos", variant: "secondary" }]}
       />
@@ -114,26 +119,23 @@ export default function ParallaxHome() {
       <ParallaxScene
         index="04"
         image="/parallax/legado.webp"
+        shadeBoost
         eyebrow="Mais que funcionalidades"
         title={
-          <>
-            É a história da sua família
-            <br />
-            em novas possibilidades.
-          </>
+          <AnimatedTitle lines={["É a história da sua família", "em novas possibilidades."]} />
         }
       >
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
           {MODULES.map((m) => (
-            <div
+            <TiltCard
               key={m.label}
-              className="flex flex-col items-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-3 py-5 text-center backdrop-blur-sm transition-colors hover:bg-white/15"
+              className="flex flex-col items-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-3 py-5 text-center backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:bg-white/15 hover:shadow-xl"
             >
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white">
                 {m.icon}
               </span>
               <span className="text-xs font-medium text-white/90">{m.label}</span>
-            </div>
+            </TiltCard>
           ))}
         </div>
       </ParallaxScene>
@@ -144,7 +146,7 @@ export default function ParallaxHome() {
         image="/parallax/depoimentos.webp"
         overlay="light"
         eyebrow="Histórias reais"
-        title="Famílias que já preservam o seu legado."
+        title={<AnimatedTitle lines={["Famílias que já preservam o seu legado."]} />}
         description="Cada família tem uma história única. Veja como o Legado Digital pode ajudar a manter memórias vivas."
       >
         <div className="grid gap-4 sm:grid-cols-3">
@@ -182,13 +184,7 @@ export default function ParallaxHome() {
         image="/parallax/encerramento.webp"
         align="center"
         eyebrow="O futuro agradece"
-        title={
-          <>
-            Preservar o passado é
-            <br />
-            construir o futuro.
-          </>
-        }
+        title={<AnimatedTitle lines={["Preservar o passado é", "construir o futuro."]} />}
         description="Comece hoje e dê às próximas gerações o maior presente: a história da sua família."
         ctas={[
           { label: "Escolher meu plano", href: "#planos" },
