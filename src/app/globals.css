@@ -99,8 +99,8 @@ h4 {
 @keyframes scene-fade-in {
   from {
     opacity: 0;
-    transform: translateY(28px);
-    filter: blur(6px);
+    transform: translateY(56px);
+    filter: blur(16px);
   }
   to {
     opacity: 1;
