@@ -1,6 +1,21 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import { NAV_LINKS, SITE, whatsappLink } from "@/lib/site";
+import { scrollToId } from "@/lib/scrollToId";
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  // Same anchor-hash-navigation bug as Header — see scrollToId's doc comment.
+  function handleHashLink(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
+    const hashIndex = href.indexOf("#");
+    if (hashIndex === -1) return;
+    const id = href.slice(hashIndex + 1);
+    if (pathname !== "/" && href.slice(0, hashIndex) !== pathname) return;
+    if (scrollToId(id)) e.preventDefault();
+  }
+
   return (
     <footer className="bg-title py-8 text-paper">
       <div className="mx-auto grid max-w-6xl gap-6 px-6 sm:grid-cols-3">
@@ -19,7 +34,11 @@ export default function Footer() {
           <ul className="mt-2 space-y-1.5 text-xs">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className="text-paper/80 hover:text-white">
+                <a
+                  href={link.href}
+                  onClick={(e) => handleHashLink(e, link.href)}
+                  className="text-paper/80 hover:text-white"
+                >
                   {link.label}
                 </a>
               </li>

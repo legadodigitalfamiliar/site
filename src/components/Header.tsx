@@ -3,10 +3,27 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { NAV_LINKS, SITE, whatsappLink } from "@/lib/site";
+import { scrollToId } from "@/lib/scrollToId";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+
+  // On the home page, the ParallaxScene sections below constantly mutate
+  // layout on scroll (see scrollToId's doc comment), which breaks plain
+  // anchor-hash navigation — clicking a nav link (or the logo) just does
+  // nothing instead of jumping to the section. Intercept and drive the
+  // scroll manually whenever the target id is already on the page; only
+  // fall through to a real navigation when it isn't (e.g. from /planos/...).
+  function handleHashLink(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
+    const hashIndex = href.indexOf("#");
+    if (hashIndex === -1) return;
+    const id = href.slice(hashIndex + 1);
+    if (pathname !== "/" && href.slice(0, hashIndex) !== pathname) return;
+    if (scrollToId(id)) e.preventDefault();
+  }
 
   useEffect(() => {
     let ticking = false;
@@ -37,6 +54,7 @@ export default function Header() {
       >
         <Link
           href="/#inicio"
+          onClick={(e) => handleHashLink(e, "/#inicio")}
           className="flex items-center gap-2 transition-all duration-300 hover:scale-105"
         >
           <Image
@@ -60,6 +78,7 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
+              onClick={(e) => handleHashLink(e, link.href)}
               className="group relative rounded text-sm font-medium text-body transition-colors hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               {link.label}
