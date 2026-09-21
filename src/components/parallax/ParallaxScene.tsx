@@ -28,9 +28,7 @@ export default function ParallaxScene({
   image,
   imagePriority = false,
   overlay = "dark",
-  speed = 0.6,
-  maxZoom = 0.2,
-  maxPan = 100,
+  speed = 0.2,
   panels,
   id,
   index,
@@ -45,12 +43,16 @@ export default function ParallaxScene({
   image?: string;
   imagePriority?: boolean;
   overlay?: "dark" | "light";
-  /** Pan strength, 0-1 (multiplies maxPan). */
+  /**
+   * How fast the background image travels compared to the content, as a
+   * fraction (0.2 = the image moves at 20% of the scroll speed while the
+   * text scrolls at 100%). The image is oversized at the bottom by exactly
+   * `speed * (sectionHeight - viewportHeight)` and pans upward from 0 to
+   * that full amount over the course of scrolling through the section —
+   * so it finishes revealing itself precisely when the section finishes
+   * scrolling past, never mid-pan and never running out early.
+   */
   speed?: number;
-  /** Max zoom-in at the start of the scene, as a fraction (0.2 = 20%). Eases to 1 (no zoom) by the end. */
-  maxZoom?: number;
-  /** Max pan distance in px at the start of the scene. Eases to 0 by the end. */
-  maxPan?: number;
   /**
    * Multiple content panels sharing ONE continuous background image and ONE
    * parallax calculation — use this instead of stacking two ParallaxScene
@@ -100,20 +102,24 @@ export default function ParallaxScene({
       const el = sectionRef.current;
       const bg = bgRef.current;
       if (!el || !bg) return;
-      // progress goes 0 -> 1 as the section travels through the viewport
-      // (0 = just entering at the bottom, 1 = fully scrolled past the top).
+
       const rect = el.getBoundingClientRect();
       const vh = window.innerHeight || 1;
-      const total = rect.height + vh;
-      const progress = Math.min(Math.max((vh - rect.top) / total, 0), 1);
+      // Scrollable distance while this section is "current": how far the
+      // viewport travels from the moment the section's top reaches the
+      // viewport's top (progress 0) to the moment the section's bottom
+      // reaches the viewport's bottom (progress 1) — i.e. the full pass.
+      const scrollSpan = Math.max(rect.height - vh, 1);
+      const progress = Math.min(Math.max(-rect.top / scrollSpan, 0), 1);
 
-      // Ken Burns-style settle: the image starts slightly zoomed in and pans,
-      // then eases to scale 1 / no offset exactly as the section finishes
-      // scrolling past — so it always ends up fully "in place", never left
-      // mid-drift. maxZoom is a fraction (0.2 = 20%), maxPan is in pixels.
-      const scale = 1 + maxZoom * (1 - progress);
-      const offset = (progress - 1) * maxPan * speed;
-      bg.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0) scale(${scale.toFixed(3)})`;
+      // The image is exactly `speed` fraction taller than the section (see
+      // height style below) and pans upward by that same extra amount over
+      // the full pass, so text moves at 100% of scroll while the image
+      // visibly moves at `speed` (e.g. 20%) of it, and both finish exactly
+      // together.
+      const extra = scrollSpan * speed;
+      bg.style.height = `${rect.height + extra}px`;
+      bg.style.transform = `translate3d(0, ${(-progress * extra).toFixed(1)}px, 0)`;
     }
 
     function onScroll() {
@@ -130,7 +136,7 @@ export default function ParallaxScene({
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [speed, maxZoom, maxPan]);
+  }, [speed]);
 
   const ctaClass = (variant: SceneCta["variant"]) => {
     if (variant === "ghost") {
@@ -148,8 +154,9 @@ export default function ParallaxScene({
     <section ref={sectionRef} className="relative overflow-hidden">
       <div
         ref={bgRef}
-        // 15vh overscan comfortably covers the default maxPan (100px * speed 0.6 = 60px max).
-        className="absolute inset-x-0 -top-[15vh] -bottom-[15vh] will-change-transform"
+        // h-full is just the pre-hydration fallback; the scroll handler
+        // overrides it with an exact px height (section height + overscan).
+        className="absolute inset-x-0 top-0 h-full will-change-transform"
       >
         {image ? (
           <Image
