@@ -1,3 +1,4 @@
+import Image from "next/image";
 import ParallaxScene from "@/components/parallax/ParallaxScene";
 import SectionRail from "@/components/parallax/SectionRail";
 import TiltCard from "@/components/parallax/TiltCard";
@@ -20,6 +21,21 @@ const PROBLEMS = [
   { icon: <IconDocuments />, title: "Documentos frágeis", text: "Papéis que correm risco de se perder." },
   { icon: <IconBook />, title: "Histórias esquecidas", text: "Memórias que desaparecem com o tempo." },
   { icon: <IconTree />, title: "Árvore confusa", text: "Relacionamentos difíceis de visualizar." },
+];
+
+const TESTIMONIALS = [
+  {
+    image: "/demo/livro.webp",
+    quote: "“Um presente para as próximas gerações conhecerem a história dos avós.”",
+  },
+  {
+    image: "/demo/pessoas.png",
+    quote: "“Finalmente um lugar só para organizar tudo, com calma.”",
+  },
+  {
+    image: "/demo/fotos.webp",
+    quote: "“Simples de usar e muito completo para registrar o que importa.”",
+  },
 ];
 
 const MODULES = [
@@ -150,17 +166,21 @@ export default function ParallaxHome() {
         description="Cada família tem uma história única. Veja como o Legado Digital pode ajudar a manter memórias vivas."
       >
         <div className="grid gap-4 sm:grid-cols-3">
-          {[
-            "“Um presente para as próximas gerações conhecerem a história dos avós.”",
-            "“Finalmente um lugar só para organizar tudo, com calma.”",
-            "“Simples de usar e muito completo para registrar o que importa.”",
-          ].map((quote, i) => (
-            <div key={i} className="rounded-2xl border border-border bg-white p-5 shadow-sm">
-              <p className="text-sm italic text-body">{quote}</p>
-              <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-body/50">
-                Exemplo ilustrativo
-              </p>
-            </div>
+          {TESTIMONIALS.map((t, i) => (
+            <TiltCard
+              key={i}
+              className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition-shadow duration-300 hover:shadow-xl"
+            >
+              <div className="relative h-36 w-full">
+                <Image src={t.image} alt="" fill sizes="(min-width: 640px) 33vw, 100vw" className="object-cover" />
+              </div>
+              <div className="p-5">
+                <p className="text-sm italic text-body">{t.quote}</p>
+                <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-body/50">
+                  Exemplo ilustrativo
+                </p>
+              </div>
+            </TiltCard>
           ))}
         </div>
         <p className="mt-6 text-xs text-body/60">
