@@ -99,16 +99,8 @@ export default function ParallaxScene({
       },
     ];
 
-  // zoom = 0 means "pinned": the image just sticks to the top of the
-  // viewport for as long as the section is scrolling past (via CSS
-  // position: sticky), completely still, and only moves on with the page
-  // once the section ends — no JS transform loop needed at all.
-  const pinned = zoom === 0;
-
   useEffect(() => {
-    if (pinned) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) return;
 
     let ticking = false;
 
@@ -118,22 +110,29 @@ export default function ParallaxScene({
       const bg = bgRef.current;
       if (!el || !bg) return;
 
-      const rect = el.getBoundingClientRect();
       const vh = window.innerHeight || 1;
-      // Scrollable distance while this section is "current": how far the
-      // viewport travels from the moment the section's top reaches the
-      // viewport's top (progress 0) to the moment the section's bottom
-      // reaches the viewport's bottom (progress 1) — i.e. the full pass.
+      // The image sits on `position: sticky` (handled in the className
+      // below), which is what actually keeps it pinned near the top of
+      // the viewport for the whole time the section is scrolling past —
+      // that part needs zero JS. On top of that resting position, this
+      // adds a small extra pan: the box is `zoom` fraction of a viewport
+      // taller than 100vh, and eases upward by exactly that extra amount
+      // as the section goes from just-reached-the-top (progress 0) to
+      // fully-scrolled-past (progress 1) — landing on the full pan
+      // exactly when the section ends, never before or after. zoom = 0
+      // means no extra height and no transform at all: fully still.
+      const extra = vh * zoom;
+      bg.style.height = `${vh + extra}px`;
+      bg.style.marginBottom = `${-(vh + extra)}px`;
+
+      if (zoom === 0 || reduced) {
+        bg.style.transform = "none";
+        return;
+      }
+
+      const rect = el.getBoundingClientRect();
       const scrollSpan = Math.max(rect.height - vh, 1);
       const progress = Math.min(Math.max(-rect.top / scrollSpan, 0), 1);
-
-      // The image is oversized by a fixed `zoom` fraction of the viewport
-      // (not the section — a tall merged scene would otherwise need a much
-      // bigger zoom to keep the same pan/scroll speed ratio). It pans
-      // upward by that same extra amount over the full pass, reaching the
-      // end of the pan exactly when the section finishes scrolling past.
-      const extra = vh * zoom;
-      bg.style.height = `${rect.height + extra}px`;
       bg.style.transform = `translate3d(0, ${(-progress * extra).toFixed(1)}px, 0)`;
     }
 
@@ -145,13 +144,14 @@ export default function ParallaxScene({
     }
 
     update();
+    if (reduced) return;
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [zoom, pinned]);
+  }, [zoom]);
 
   const ctaClass = (variant: SceneCta["variant"]) => {
     if (variant === "ghost") {
@@ -166,34 +166,17 @@ export default function ParallaxScene({
   const isDark = overlay === "dark";
 
   return (
-    <section
-      ref={sectionRef}
-      // overflow-hidden clips the oversized pan-mode image layer, but it
-      // also breaks position:sticky (an overflow-hidden ancestor that
-      // never scrolls internally becomes the sticky containing block,
-      // which then can't track the viewport) — so it must be dropped
-      // entirely in pinned mode, which needs no clipping anyway (the
-      // pinned image is exactly one viewport tall, never oversized).
-      className={`relative ${pinned ? "" : "overflow-hidden"}`}
-    >
+    <section ref={sectionRef} className="relative">
       <div
         ref={bgRef}
-        className={
-          pinned
-            ? // Pinned: stays put via native CSS sticky for the whole
-              // section — zero movement — then scrolls away with the page
-              // the instant the section ends. position:sticky is in-flow
-              // (unlike absolute), so without the negative margin it would
-              // reserve its own 100vh of space and push all the panel
-              // content below it down by that same amount. The negative
-              // margin cancels that reserved space so content still flows
-              // right where it should, while the element still paints
-              // pinned to the viewport.
-              "sticky top-0 h-screen w-full -mb-[100vh]"
-            : // h-full is just the pre-hydration fallback; the scroll
-              // handler overrides it with an exact px height.
-              "absolute inset-x-0 top-0 h-full will-change-transform"
-        }
+        // position: sticky keeps the image pinned near the top of the
+        // viewport for as long as the section is scrolling past, then lets
+        // it scroll away with the page once the section ends. It's in-flow
+        // (unlike absolute), so the scroll handler above also sets an
+        // equal-and-opposite negative margin-bottom to cancel the space it
+        // would otherwise reserve — without that, its own height would
+        // push all of the panel content below it down by that same amount.
+        className="sticky top-0 w-full will-change-transform"
       >
         {image ? (
           <Image
