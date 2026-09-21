@@ -45,6 +45,7 @@ export default function ParallaxHome() {
           {
             id: "inicio",
             index: "01",
+            noReveal: true,
             eyebrow: "Algumas histórias",
             title: (
               <>

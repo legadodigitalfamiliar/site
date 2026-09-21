@@ -22,6 +22,14 @@ export type ScenePanel = {
   ctas?: SceneCta[];
   children?: ReactNode;
   minHeightClass?: string;
+  /**
+   * Skip the scroll-triggered reveal and render this panel fully visible
+   * immediately. Use for the very first panel on the page (the hero): it's
+   * already inside the viewport at initial load, before any scroll has
+   * happened, so a `view()` timeline keyed to "entering" the viewport can
+   * leave it stuck invisible instead of ever playing.
+   */
+  noReveal?: boolean;
 };
 
 export default function ParallaxScene({
@@ -174,8 +182,14 @@ export default function ParallaxScene({
           pinned
             ? // Pinned: stays put via native CSS sticky for the whole
               // section — zero movement — then scrolls away with the page
-              // the instant the section ends.
-              "sticky top-0 h-screen w-full"
+              // the instant the section ends. position:sticky is in-flow
+              // (unlike absolute), so without the negative margin it would
+              // reserve its own 100vh of space and push all the panel
+              // content below it down by that same amount. The negative
+              // margin cancels that reserved space so content still flows
+              // right where it should, while the element still paints
+              // pinned to the viewport.
+              "sticky top-0 h-screen w-full -mb-[100vh]"
             : // h-full is just the pre-hydration fallback; the scroll
               // handler overrides it with an exact px height.
               "absolute inset-x-0 top-0 h-full will-change-transform"
@@ -214,7 +228,9 @@ export default function ParallaxScene({
             <div
               className={`mx-auto w-full max-w-6xl ${panel.align === "center" ? "text-center" : ""}`}
             >
-              <div className={`scene-reveal max-w-2xl ${panel.align === "center" ? "mx-auto" : ""}`}>
+              <div
+                className={`${panel.noReveal ? "" : "scene-reveal"} max-w-2xl ${panel.align === "center" ? "mx-auto" : ""}`}
+              >
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
                   {panel.eyebrow}
                 </p>
@@ -247,7 +263,9 @@ export default function ParallaxScene({
                 )}
               </div>
               {panel.children && (
-                <div className="scene-reveal-children mt-12">{panel.children}</div>
+                <div className={`${panel.noReveal ? "" : "scene-reveal-children"} mt-12`}>
+                  {panel.children}
+                </div>
               )}
             </div>
           </div>
