@@ -28,7 +28,7 @@ export default function ParallaxScene({
   image,
   imagePriority = false,
   overlay = "dark",
-  speed = 0.2,
+  zoom = 0.2,
   panels,
   id,
   index,
@@ -44,15 +44,15 @@ export default function ParallaxScene({
   imagePriority?: boolean;
   overlay?: "dark" | "light";
   /**
-   * How fast the background image travels compared to the content, as a
-   * fraction (0.2 = the image moves at 20% of the scroll speed while the
-   * text scrolls at 100%). The image is oversized at the bottom by exactly
-   * `speed * (sectionHeight - viewportHeight)` and pans upward from 0 to
-   * that full amount over the course of scrolling through the section —
-   * so it finishes revealing itself precisely when the section finishes
-   * scrolling past, never mid-pan and never running out early.
+   * How much taller the image is than one viewport, as a fraction (0.2 =
+   * 20% extra height, i.e. the minimum "zoom" needed for it to have
+   * anywhere to pan). Capped relative to the viewport — not the section's
+   * full height — so a tall merged multi-panel scene doesn't force a much
+   * bigger zoom than a short one. The image pans upward by exactly that
+   * extra amount, reaching the full pan precisely when the section finishes
+   * scrolling past (text always scrolls at normal 100% speed).
    */
-  speed?: number;
+  zoom?: number;
   /**
    * Multiple content panels sharing ONE continuous background image and ONE
    * parallax calculation — use this instead of stacking two ParallaxScene
@@ -112,12 +112,12 @@ export default function ParallaxScene({
       const scrollSpan = Math.max(rect.height - vh, 1);
       const progress = Math.min(Math.max(-rect.top / scrollSpan, 0), 1);
 
-      // The image is exactly `speed` fraction taller than the section (see
-      // height style below) and pans upward by that same extra amount over
-      // the full pass, so text moves at 100% of scroll while the image
-      // visibly moves at `speed` (e.g. 20%) of it, and both finish exactly
-      // together.
-      const extra = scrollSpan * speed;
+      // The image is oversized by a fixed `zoom` fraction of the viewport
+      // (not the section — a tall merged scene would otherwise need a much
+      // bigger zoom to keep the same pan/scroll speed ratio). It pans
+      // upward by that same extra amount over the full pass, reaching the
+      // end of the pan exactly when the section finishes scrolling past.
+      const extra = vh * zoom;
       bg.style.height = `${rect.height + extra}px`;
       bg.style.transform = `translate3d(0, ${(-progress * extra).toFixed(1)}px, 0)`;
     }
@@ -136,7 +136,7 @@ export default function ParallaxScene({
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [speed]);
+  }, [zoom]);
 
   const ctaClass = (variant: SceneCta["variant"]) => {
     if (variant === "ghost") {
