@@ -5,7 +5,10 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-paper/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="#inicio" className="font-display text-lg font-semibold text-title">
+        <Link
+          href="#inicio"
+          className="font-display text-lg font-semibold text-title transition-transform duration-300 hover:scale-105"
+        >
           {SITE.name}
         </Link>
 
@@ -14,9 +17,10 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="rounded text-sm font-medium text-body transition-colors hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="group relative rounded text-sm font-medium text-body transition-colors hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               {link.label}
+              <span className="absolute -bottom-1 left-0 h-px w-0 bg-primary transition-all duration-300 group-hover:w-full" />
             </Link>
           ))}
         </nav>
@@ -25,7 +29,7 @@ export default function Header() {
           href={whatsappLink("Olá! Quero saber mais sobre o Legado Digital.")}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:px-5 sm:py-2.5"
+          className="inline-flex items-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-dark hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:px-5 sm:py-2.5"
         >
           Falar no WhatsApp
         </a>

@@ -1,4 +1,5 @@
 import { PLANS, whatsappLink } from "@/lib/site";
+import Reveal from "@/components/Reveal";
 
 const currency = new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -10,28 +11,31 @@ export default function PlansSection() {
   return (
     <section id="planos" className="py-16 sm:py-20">
       <div className="mx-auto max-w-6xl px-6">
-        <div className="mx-auto max-w-2xl text-center">
+        <Reveal className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold text-title sm:text-4xl">Escolha o plano certo para sua família</h2>
           <p className="mt-4 text-body">
             Implantação de {currency.format(1800)} em todos os planos. A manutenção anual varia
             conforme o tamanho e o suporte que sua família precisa.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="mx-auto mt-6 max-w-xl rounded-2xl border border-secondary/30 bg-secondary-light px-5 py-3 text-center text-sm text-body">
+        <Reveal
+          delay={100}
+          className="mx-auto mt-6 max-w-xl rounded-2xl border border-secondary/30 bg-secondary-light px-5 py-3 text-center text-sm text-body"
+        >
           <span className="font-semibold text-title">Não sabe qual escolher?</span> Comece pelo{" "}
           <strong className="text-primary">Legado Família</strong> — dá para fazer upgrade a
           qualquer momento se sua família crescer.
-        </div>
+        </Reveal>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-5">
-          {PLANS.map((plan) => (
+          {PLANS.map((plan, index) => (
+            <Reveal key={plan.id} delay={index * 80} className="h-full">
             <div
-              key={plan.id}
-              className={`flex flex-col rounded-3xl border p-6 ${
+              className={`flex h-full flex-col rounded-3xl border p-6 transition-all duration-300 ${
                 plan.destaque
-                  ? "border-primary bg-primary text-white shadow-xl lg:-translate-y-3"
-                  : "border-border bg-white"
+                  ? "border-primary bg-primary text-white shadow-xl hover:shadow-2xl lg:-translate-y-3"
+                  : "border-border bg-white hover:-translate-y-1 hover:shadow-lg"
               }`}
             >
               {plan.destaque && (
@@ -92,6 +96,7 @@ export default function PlansSection() {
                 Falar no WhatsApp
               </a>
             </div>
+            </Reveal>
           ))}
         </div>
 

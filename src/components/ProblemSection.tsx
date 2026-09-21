@@ -1,3 +1,5 @@
+import Reveal from "@/components/Reveal";
+
 const PROBLEMS = [
   {
     title: "Fotos espalhadas",
@@ -49,26 +51,25 @@ export default function ProblemSection() {
   return (
     <section className="bg-white py-16 sm:py-20">
       <div className="mx-auto max-w-6xl px-6">
-        <div className="mx-auto max-w-2xl text-center">
+        <Reveal className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold text-title sm:text-4xl">O desafio de preservar memórias</h2>
           <p className="mt-4 text-body">
             Toda família acumula uma vida inteira de histórias — mas sem um lugar certo para
             guardá-las, elas se perdem.
           </p>
-        </div>
+        </Reveal>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2">
-          {PROBLEMS.map((problem) => (
-            <div
-              key={problem.title}
-              className="rounded-2xl border border-border bg-paper p-6 transition-shadow hover:shadow-md"
-            >
-              <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                {problem.icon}
+          {PROBLEMS.map((problem, index) => (
+            <Reveal key={problem.title} delay={index * 90}>
+              <div className="group h-full rounded-2xl border border-border bg-paper p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg">
+                <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                  {problem.icon}
+                </div>
+                <h3 className="text-lg font-semibold text-title">{problem.title}</h3>
+                <p className="mt-2 text-sm text-body">{problem.text}</p>
               </div>
-              <h3 className="text-lg font-semibold text-title">{problem.title}</h3>
-              <p className="mt-2 text-sm text-body">{problem.text}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>

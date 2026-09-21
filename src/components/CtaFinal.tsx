@@ -1,9 +1,10 @@
 import { whatsappLink } from "@/lib/site";
+import Reveal from "@/components/Reveal";
 
 export default function CtaFinal() {
   return (
     <section id="contato" className="bg-primary py-20">
-      <div className="mx-auto max-w-3xl px-6 text-center">
+      <Reveal className="mx-auto max-w-3xl px-6 text-center">
         <h2 className="text-3xl font-bold text-white sm:text-4xl">
           Comece a preservar sua história hoje
         </h2>
@@ -30,7 +31,7 @@ export default function CtaFinal() {
             Agendar demonstração
           </a>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

@@ -1,3 +1,5 @@
+import Reveal from "@/components/Reveal";
+
 const ITEMS = [
   {
     tag: "Tudo em um lugar",
@@ -95,25 +97,25 @@ export default function SolutionSection() {
   return (
     <section id="como-funciona" className="py-16 sm:py-20">
       <div className="mx-auto max-w-6xl px-6">
-        <div className="mx-auto max-w-2xl text-center">
+        <Reveal className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold text-title sm:text-4xl">Como o Legado Digital resolve</h2>
           <p className="mt-4 text-body">
             Uma plataforma pensada para transformar memórias soltas em um acervo organizado, vivo
             e duradouro.
           </p>
-        </div>
+        </Reveal>
 
         <div className="mt-16 space-y-16">
           {ITEMS.map((item, index) => (
-            <div
+            <Reveal
               key={item.title}
               className={`grid items-center gap-10 md:grid-cols-2 ${
                 index % 2 === 1 ? "md:[&>*:first-child]:order-2" : ""
               }`}
             >
-              <div className="flex items-center justify-center rounded-3xl border border-border bg-white p-10 shadow-sm">
+              <div className="group flex items-center justify-center rounded-3xl border border-border bg-white p-10 shadow-sm transition-shadow duration-300 hover:shadow-lg">
                 <div
-                  className={`flex h-32 w-32 items-center justify-center rounded-full ${ACCENT_CLASSES[item.accent]}`}
+                  className={`flex h-32 w-32 items-center justify-center rounded-full transition-transform duration-500 ease-out group-hover:scale-105 group-hover:rotate-6 ${ACCENT_CLASSES[item.accent]}`}
                 >
                   {item.icon}
                 </div>
@@ -127,7 +129,7 @@ export default function SolutionSection() {
                 <h3 className="text-2xl font-semibold text-title">{item.title}</h3>
                 <p className="mt-3 text-body">{item.text}</p>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>
