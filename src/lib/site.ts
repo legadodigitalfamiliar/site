@@ -10,6 +10,9 @@ export const SITE = {
 // robots.txt, sitemap.xml) picks up the change automatically.
 export const SITE_URL = "https://legadodigital.vercel.app";
 
+// Google Analytics 4 property created for this site (item 6 of the SEO checklist).
+export const GA_MEASUREMENT_ID = "G-HQLSGNTHWC";
+
 export function whatsappLink(message: string) {
   const text = encodeURIComponent(message);
   return `https://wa.me/${SITE.whatsapp}?text=${text}`;

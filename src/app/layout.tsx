@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Outfit, Public_Sans } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
-import { SITE_URL } from "@/lib/site";
+import { GA_MEASUREMENT_ID, SITE_URL } from "@/lib/site";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -63,6 +64,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${outfit.variable} ${publicSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-paper text-body font-sans">
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
         {children}
       </body>
     </html>
