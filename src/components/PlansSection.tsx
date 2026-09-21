@@ -45,22 +45,29 @@ export default function PlansSection() {
                 {plan.name}
               </h3>
 
-              <div className="mt-4 space-y-1.5 border-b border-current/10 pb-4">
-                <div className="flex items-baseline justify-between gap-2">
-                  <span className={`text-xs uppercase tracking-wide ${plan.destaque ? "text-white/70" : "text-body/70"}`}>
+              <div className="mt-4 space-y-3 border-b border-current/10 pb-4">
+                <div className="flex min-w-0 items-baseline justify-between gap-2">
+                  <span className={`shrink-0 text-xs uppercase tracking-wide ${plan.destaque ? "text-white/70" : "text-body/70"}`}>
                     Implantação
                   </span>
-                  <span className={`text-sm font-semibold ${plan.destaque ? "text-white" : "text-title"}`}>
+                  <span className={`truncate text-sm font-semibold ${plan.destaque ? "text-white" : "text-title"}`}>
                     {currency.format(plan.implantacao)}
                   </span>
                 </div>
-                <div className="flex items-baseline justify-between gap-2">
+                <div>
                   <span className={`text-xs uppercase tracking-wide ${plan.destaque ? "text-white/70" : "text-body/70"}`}>
                     Manutenção
                   </span>
-                  <span className={`text-2xl font-bold ${plan.destaque ? "text-white" : "text-title"}`}>
-                    {plan.manutencao === 0 ? "R$ 0" : `${currency.format(plan.manutencao ?? 0)}/ano`}
-                  </span>
+                  <p className={`text-2xl font-bold leading-tight ${plan.destaque ? "text-white" : "text-title"}`}>
+                    {plan.manutencao === 0 ? (
+                      "R$ 0"
+                    ) : (
+                      <>
+                        {currency.format(plan.manutencao ?? 0)}
+                        <span className="text-sm font-medium">/ano</span>
+                      </>
+                    )}
+                  </p>
                 </div>
               </div>
 
