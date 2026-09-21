@@ -27,14 +27,17 @@ const TESTIMONIALS = [
   {
     image: "/demo/livro.webp",
     quote: "“Um presente para as próximas gerações conhecerem a história dos avós.”",
+    href: "https://www.olsenbellotoleal.com.br/livro.html?slug=livro-da-falilia",
   },
   {
     image: "/demo/pessoas.png",
     quote: "“Finalmente um lugar só para organizar tudo, com calma.”",
+    href: "https://www.olsenbellotoleal.com.br/pessoas.html",
   },
   {
     image: "/demo/fotos.webp",
     quote: "“Simples de usar e muito completo para registrar o que importa.”",
+    href: "https://www.olsenbellotoleal.com.br/galeria.html",
   },
 ];
 
@@ -205,21 +208,29 @@ export default function ParallaxHome() {
               key={i}
               className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition-shadow duration-300 hover:shadow-xl"
             >
-              <div className="relative h-36 w-full">
-                <Image src={t.image} alt="" fill sizes="(min-width: 640px) 33vw, 100vw" className="object-cover" />
-              </div>
-              <div className="p-5">
-                <p className="text-sm italic text-body">{t.quote}</p>
-                <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-body/50">
-                  Exemplo ilustrativo
-                </p>
-              </div>
+              <a
+                href={t.href}
+                target="_blank"
+                rel="noreferrer"
+                className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                <div className="relative h-36 w-full">
+                  <Image src={t.image} alt="" fill sizes="(min-width: 640px) 33vw, 100vw" className="object-cover" />
+                </div>
+                <div className="p-5">
+                  <p className="text-sm italic text-body">{t.quote}</p>
+                  <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-body/50">
+                    Exemplo ilustrativo
+                  </p>
+                </div>
+              </a>
             </TiltCard>
           ))}
         </div>
         <p className="mt-6 text-xs text-body/60">
           * Depoimentos ilustrativos enquanto reunimos histórias reais de famílias que usam o
-          Legado Digital. Tem uma para compartilhar?{" "}
+          Legado Digital — clique em um card para ver um exemplo funcional. Tem uma história para
+          compartilhar?{" "}
           <a
             href={whatsappLink("Olá! Quero compartilhar minha experiência com o Legado Digital.")}
             target="_blank"
