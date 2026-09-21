@@ -14,26 +14,11 @@ export type SceneCta = {
   external?: boolean;
 };
 
-export default function ParallaxScene({
-  id,
-  index,
-  image,
-  imagePriority = false,
-  overlay = "dark",
-  align = "left",
-  eyebrow,
-  title,
-  description,
-  ctas,
-  children,
-  minHeightClass = "min-h-screen",
-  speed = 0.35,
-}: {
+export type ScenePanel = {
+  /** Anchor id for this panel (nav links target this, not the outer section). */
   id?: string;
+  /** Rail index, e.g. "01". Required — used both for the rail and as the React key. */
   index: string;
-  image?: string;
-  imagePriority?: boolean;
-  overlay?: "dark" | "light";
   align?: "left" | "center";
   eyebrow: string;
   title: ReactNode;
@@ -41,11 +26,66 @@ export default function ParallaxScene({
   ctas?: SceneCta[];
   children?: ReactNode;
   minHeightClass?: string;
+};
+
+export default function ParallaxScene({
+  image,
+  imagePriority = false,
+  overlay = "dark",
+  speed = 0.35,
+  panels,
+  id,
+  index,
+  align = "left",
+  eyebrow,
+  title,
+  description,
+  ctas,
+  children,
+  minHeightClass = "min-h-screen",
+}: {
+  image?: string;
+  imagePriority?: boolean;
+  overlay?: "dark" | "light";
   /** How fast the background image travels relative to the page scroll (0 = pinned, 1 = same speed as content). */
   speed?: number;
+  /**
+   * Multiple content panels sharing ONE continuous background image and ONE
+   * parallax calculation — use this instead of stacking two ParallaxScene
+   * instances with the same `image`, which would produce a visible seam
+   * (each section computes its own independent offset, so two crops of the
+   * same photo end up misaligned at the boundary).
+   */
+  panels?: ScenePanel[];
+  // Shorthand for a single-panel scene — wrapped into `panels` internally.
+  id?: string;
+  index?: string;
+  align?: "left" | "center";
+  eyebrow?: string;
+  title?: ReactNode;
+  description?: string;
+  ctas?: SceneCta[];
+  children?: ReactNode;
+  minHeightClass?: string;
 }) {
   const sectionRef = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
+
+  const resolvedPanels: ScenePanel[] =
+    panels ??
+    [
+      {
+        id,
+        index: index ?? "01",
+        align,
+        eyebrow: eyebrow ?? "",
+        title,
+        description,
+        ctas,
+        children,
+        minHeightClass,
+      },
+    ];
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -100,12 +140,7 @@ export default function ParallaxScene({
   const isDark = overlay === "dark";
 
   return (
-    <section
-      ref={sectionRef}
-      id={id}
-      data-scene={index}
-      className={`relative overflow-hidden ${minHeightClass}`}
-    >
+    <section ref={sectionRef} className="relative overflow-hidden">
       <div
         ref={bgRef}
         className="absolute inset-x-0 -top-[45vh] -bottom-[45vh] will-change-transform"
@@ -132,42 +167,53 @@ export default function ParallaxScene({
         }`}
       />
 
-      <div className="relative z-10 flex min-h-screen items-center px-6 py-20">
-        <div className={`mx-auto w-full max-w-6xl ${align === "center" ? "text-center" : ""}`}>
-          <div className={`max-w-2xl ${align === "center" ? "mx-auto" : ""}`}>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
-              {eyebrow}
-            </p>
-            <h2
-              className={`mt-4 text-4xl font-bold leading-[1.08] sm:text-5xl md:text-6xl ${
-                isDark ? "text-white" : "text-title"
-              }`}
+      <div className="relative z-10">
+        {resolvedPanels.map((panel) => (
+          <div
+            key={panel.index}
+            id={panel.id}
+            data-scene={panel.index}
+            className={`flex items-center px-6 py-20 ${panel.minHeightClass ?? "min-h-screen"}`}
+          >
+            <div
+              className={`mx-auto w-full max-w-6xl ${panel.align === "center" ? "text-center" : ""}`}
             >
-              {title}
-            </h2>
-            {description && (
-              <p className={`mt-5 max-w-xl text-lg ${isDark ? "text-white/85" : "text-body"}`}>
-                {description}
-              </p>
-            )}
-            {ctas && ctas.length > 0 && (
-              <div className="mt-8 flex flex-wrap gap-4">
-                {ctas.map((cta) => (
-                  <a
-                    key={cta.label}
-                    href={cta.href}
-                    target={cta.external ? "_blank" : undefined}
-                    rel={cta.external ? "noreferrer" : undefined}
-                    className={ctaClass(cta.variant)}
-                  >
-                    {cta.label}
-                  </a>
-                ))}
+              <div className={`max-w-2xl ${panel.align === "center" ? "mx-auto" : ""}`}>
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+                  {panel.eyebrow}
+                </p>
+                <h2
+                  className={`mt-4 text-4xl font-bold leading-[1.08] sm:text-5xl md:text-6xl ${
+                    isDark ? "text-white" : "text-title"
+                  }`}
+                >
+                  {panel.title}
+                </h2>
+                {panel.description && (
+                  <p className={`mt-5 max-w-xl text-lg ${isDark ? "text-white/85" : "text-body"}`}>
+                    {panel.description}
+                  </p>
+                )}
+                {panel.ctas && panel.ctas.length > 0 && (
+                  <div className="mt-8 flex flex-wrap gap-4">
+                    {panel.ctas.map((cta) => (
+                      <a
+                        key={cta.label}
+                        href={cta.href}
+                        target={cta.external ? "_blank" : undefined}
+                        rel={cta.external ? "noreferrer" : undefined}
+                        className={ctaClass(cta.variant)}
+                      >
+                        {cta.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
+              {panel.children && <div className="mt-12">{panel.children}</div>}
+            </div>
           </div>
-          {children && <div className="mt-12">{children}</div>}
-        </div>
+        ))}
       </div>
     </section>
   );

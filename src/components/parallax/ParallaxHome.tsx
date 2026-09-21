@@ -38,55 +38,65 @@ export default function ParallaxHome() {
       <SectionRail />
 
       <ParallaxScene
-        id="inicio"
-        index="01"
         image="/parallax/hero.webp"
         imagePriority
-        eyebrow="Algumas histórias"
-        title={
-          <>
-            Merecem
-            <br />
-            continuar.
-          </>
-        }
-        description="Reúna fotos, pessoas, histórias e documentos da sua família em um só lugar — organizado hoje, preservado para as próximas gerações."
-        ctas={[
-          { label: "Conhecer o Legado Digital", href: "#como-funciona" },
-          { label: "Falar no WhatsApp", href: whatsappLink("Olá! Quero conhecer o Legado Digital."), variant: "ghost", external: true },
+        panels={[
+          {
+            id: "inicio",
+            index: "01",
+            eyebrow: "Algumas histórias",
+            title: (
+              <>
+                Merecem
+                <br />
+                continuar.
+              </>
+            ),
+            description:
+              "Reúna fotos, pessoas, histórias e documentos da sua família em um só lugar — organizado hoje, preservado para as próximas gerações.",
+            ctas: [
+              { label: "Conhecer o Legado Digital", href: "#como-funciona" },
+              {
+                label: "Falar no WhatsApp",
+                href: whatsappLink("Olá! Quero conhecer o Legado Digital."),
+                variant: "ghost",
+                external: true,
+              },
+            ],
+          },
+          {
+            index: "02",
+            eyebrow: "O desafio é real",
+            title: (
+              <>
+                Memórias que se
+                <br />
+                perdem com o tempo.
+              </>
+            ),
+            description:
+              "Fotos espalhadas, histórias esquecidas, documentos em papel e conexões familiares difíceis de visualizar.",
+            children: (
+              <div className="grid max-w-3xl gap-3 sm:grid-cols-2">
+                {PROBLEMS.map((p) => (
+                  <div
+                    key={p.title}
+                    className="flex items-start gap-3 rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm"
+                  >
+                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-white/15 text-white">
+                      {p.icon}
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold text-white">{p.title}</p>
+                      <p className="mt-0.5 text-xs text-white/75">{p.text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ),
+          },
         ]}
       />
-
-      <ParallaxScene
-        index="02"
-        image="/parallax/hero.webp"
-        eyebrow="O desafio é real"
-        title={
-          <>
-            Memórias que se
-            <br />
-            perdem com o tempo.
-          </>
-        }
-        description="Fotos espalhadas, histórias esquecidas, documentos em papel e conexões familiares difíceis de visualizar."
-      >
-        <div className="grid max-w-3xl gap-3 sm:grid-cols-2">
-          {PROBLEMS.map((p) => (
-            <div
-              key={p.title}
-              className="flex items-start gap-3 rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm"
-            >
-              <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-white/15 text-white">
-                {p.icon}
-              </span>
-              <div>
-                <p className="text-sm font-semibold text-white">{p.title}</p>
-                <p className="mt-0.5 text-xs text-white/75">{p.text}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </ParallaxScene>
 
       <ParallaxScene
         id="como-funciona"
