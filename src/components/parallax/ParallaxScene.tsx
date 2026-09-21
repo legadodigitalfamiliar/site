@@ -226,37 +226,47 @@ export default function ParallaxScene({
   const isDark = overlay === "dark";
 
   return (
-    <section
-      ref={sectionRef}
-      // overflow-hidden clips the oversized pan-mode image layer, but it
-      // also breaks position:sticky (a non-scrolling overflow-hidden
-      // ancestor becomes the sticky containing block instead of the
-      // viewport) — so it's dropped entirely in sticky mode, which needs
-      // no clipping anyway (nothing sticks out past the viewport edges).
-      className={`relative ${sticky ? "" : "overflow-hidden"}`}
-    >
-      <div
-        ref={bgRef}
-        className={
-          sticky
-            ? "sticky top-0 w-full will-change-transform"
-            : // h-full is just the pre-hydration fallback; the scroll
-              // handler overrides it with an exact px height.
-              "absolute inset-x-0 top-0 h-full will-change-transform"
-        }
-      >
-        {image ? (
-          <Image
-            src={image}
-            alt=""
-            fill
-            priority={imagePriority}
-            sizes="100vw"
-            className="object-cover"
-          />
-        ) : (
-          <div className="bg-grain h-full w-full bg-gradient-to-br from-primary via-primary-dark to-title" />
-        )}
+    <section ref={sectionRef} className="relative">
+      {/*
+        The clip lives on this dedicated wrapper, not on the <section>
+        itself: `overflow` values other than visible/clip make an element a
+        scroll container per spec, and putting overflow-hidden on the
+        section made it the nearest scroll container for every descendant —
+        including the text panels below, whose `animation-timeline: view()`
+        blur/rise reveal needs to track the real page scroll. With the
+        section itself a non-scrolling "scroll container" of ~zero
+        scrollable range, that timeline degenerated to its resolved end
+        state immediately, so text appeared already sharp instead of
+        blurring in. Scoping the clip to just this image wrapper keeps the
+        oversized pan-mode image contained without hijacking the timeline.
+        Sticky mode needs no clipping (nothing sticks out past the viewport
+        edges) and must stay unclipped anyway, since a non-scrolling
+        overflow-hidden ancestor also breaks position:sticky.
+      */}
+      <div className={`absolute inset-0 ${sticky ? "" : "overflow-hidden"}`}>
+        <div
+          ref={bgRef}
+          className={
+            sticky
+              ? "sticky top-0 w-full will-change-transform"
+              : // h-full is just the pre-hydration fallback; the scroll
+                // handler overrides it with an exact px height.
+                "absolute inset-x-0 top-0 h-full will-change-transform"
+          }
+        >
+          {image ? (
+            <Image
+              src={image}
+              alt=""
+              fill
+              priority={imagePriority}
+              sizes="100vw"
+              className="object-cover"
+            />
+          ) : (
+            <div className="bg-grain h-full w-full bg-gradient-to-br from-primary via-primary-dark to-title" />
+          )}
+        </div>
       </div>
 
       <div

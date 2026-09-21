@@ -39,13 +39,21 @@ const TESTIMONIALS = [
 ];
 
 const MODULES = [
-  { icon: <IconTree />, label: "Árvore genealógica" },
-  { icon: <IconPhotos />, label: "Fotos e álbuns" },
+  {
+    icon: <IconTree />,
+    label: "Árvore genealógica",
+    href: "https://www.olsenbellotoleal.com.br/arvore.html?foco=bf01bfa2-d67d-4462-985a-5e573e631a43",
+  },
+  { icon: <IconPhotos />, label: "Fotos e álbuns", href: "https://www.olsenbellotoleal.com.br/galeria.html" },
   { icon: <IconDocuments />, label: "Documentos" },
-  { icon: <IconBook />, label: "Histórias e livros" },
+  {
+    icon: <IconBook />,
+    label: "Histórias e livros",
+    href: "https://www.olsenbellotoleal.com.br/historias.html",
+  },
   { icon: <IconLocation />, label: "Locais" },
-  { icon: <IconTimeline />, label: "Linha do tempo" },
-  { icon: <IconPeople />, label: "Pessoas" },
+  { icon: <IconTimeline />, label: "Linha do tempo", href: "https://www.olsenbellotoleal.com.br/timeline.html" },
+  { icon: <IconPeople />, label: "Pessoas", href: "https://www.olsenbellotoleal.com.br/pessoas.html" },
   { icon: <IconLink />, label: "Links externos" },
   { icon: <IconMore />, label: "E muito mais" },
 ];
@@ -142,18 +150,40 @@ export default function ParallaxHome() {
         }
       >
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
-          {MODULES.map((m) => (
-            <TiltCard
-              key={m.label}
-              className="flex flex-col items-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-3 py-5 text-center backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:bg-white/15 hover:shadow-xl"
-            >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white">
-                {m.icon}
-              </span>
-              <span className="text-xs font-medium text-white/90">{m.label}</span>
-            </TiltCard>
-          ))}
+          {MODULES.map((m) => {
+            const cardInner = (
+              <>
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white">
+                  {m.icon}
+                </span>
+                <span className="text-xs font-medium text-white/90">{m.label}</span>
+              </>
+            );
+            return (
+              <TiltCard
+                key={m.label}
+                className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:bg-white/15 hover:shadow-xl"
+              >
+                {m.href ? (
+                  <a
+                    href={m.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex flex-col items-center gap-2 px-3 py-5 text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  >
+                    {cardInner}
+                  </a>
+                ) : (
+                  <div className="flex flex-col items-center gap-2 px-3 py-5 text-center">{cardInner}</div>
+                )}
+              </TiltCard>
+            );
+          })}
         </div>
+        <p className="mt-6 text-xs text-white/60">
+          * Árvore genealógica, Fotos e álbuns, Histórias e livros, Pessoas e Linha do tempo abrem um exemplo
+          funcional em outra aba.
+        </p>
       </ParallaxScene>
 
       <ParallaxScene

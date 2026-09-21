@@ -13,6 +13,7 @@ const ITEMS = [
 
 export default function SectionRail() {
   const [active, setActive] = useState("01");
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-scene]"));
@@ -32,6 +33,38 @@ export default function SectionRail() {
 
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
+  }, []);
+
+  // The rail only makes sense while scrolling through the parallax scenes it
+  // navigates — once the page moves past the last one (into the plans/pricing
+  // content below), hide it. Checked on scroll (same rAF-throttled pattern as
+  // ParallaxScene's own handler) rather than IntersectionObserver, so it
+  // reliably re-evaluates on every scroll position instead of only at
+  // threshold-crossing moments.
+  useEffect(() => {
+    const sections = document.querySelectorAll<HTMLElement>("[data-scene]");
+    const lastSection = sections[sections.length - 1];
+    if (!lastSection) return;
+
+    let ticking = false;
+    function update() {
+      ticking = false;
+      setVisible(lastSection.getBoundingClientRect().bottom > 0);
+    }
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    }
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   function goTo(index: string) {
@@ -71,7 +104,11 @@ export default function SectionRail() {
   }
 
   return (
-    <div className="fixed top-1/2 right-5 z-40 hidden -translate-y-1/2 items-stretch gap-3 lg:flex">
+    <div
+      className={`fixed top-1/2 right-5 z-40 hidden -translate-y-1/2 items-stretch gap-3 transition-opacity duration-300 lg:flex ${
+        visible ? "opacity-100" : "pointer-events-none opacity-0"
+      }`}
+    >
       <div className="rail-progress-track flex-shrink-0">
         <div className="rail-progress-fill" />
       </div>
