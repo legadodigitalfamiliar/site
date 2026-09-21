@@ -145,7 +145,15 @@ export default function ParallaxScene({
         }
 
         const rect = el.getBoundingClientRect();
-        const scrollSpan = Math.max(rect.height - vh, 1);
+        // Floor scrollSpan to a sensible minimum: a section whose height is
+        // barely more than one viewport (e.g. a single min-h-screen panel)
+        // would otherwise have a near-zero scrollable distance, compressing
+        // the whole 0->1 pan into a couple of scroll pixels — which reads
+        // as an instant jump/snap instead of a pan. A floor guarantees the
+        // pan always eases over a comfortable minimum distance, even if
+        // that means it settles slightly before the section's true end for
+        // unusually short sections.
+        const scrollSpan = Math.max(rect.height - vh, vh * 0.6);
         const progress = Math.min(Math.max(-rect.top / scrollSpan, 0), 1);
         bg.style.transform = `translate3d(0, ${(-progress * extra).toFixed(1)}px, 0)`;
         return;
@@ -156,8 +164,13 @@ export default function ParallaxScene({
       // Default pan mode: image is absolutely positioned (out of flow) and
       // oversized relative to the whole section, panning across that extra
       // height as the section scrolls past — see zoom's doc comment above.
+      // Same minimum-scrollSpan floor as the sticky branch above: a section
+      // only barely taller than one viewport (e.g. a single min-h-screen
+      // panel with no extra content) would otherwise compress the whole
+      // pan into a couple of scroll pixels, reading as a sudden jump
+      // instead of a smooth motion.
       const rect = el.getBoundingClientRect();
-      const scrollSpan = Math.max(rect.height - vh, 1);
+      const scrollSpan = Math.max(rect.height - vh, vh * 0.6);
       const progress = Math.min(Math.max(-rect.top / scrollSpan, 0), 1);
       const extra = vh * zoom;
       bg.style.height = `${rect.height + extra}px`;
