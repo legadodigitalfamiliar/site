@@ -6,7 +6,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-border bg-paper/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link
-          href="#inicio"
+          href="/#inicio"
           className="font-display text-lg font-semibold text-title transition-transform duration-300 hover:scale-105"
         >
           {SITE.name}

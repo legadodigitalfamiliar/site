@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { PLANS, whatsappLink } from "@/lib/site";
 import Reveal from "@/components/Reveal";
 
@@ -50,13 +51,13 @@ export default function PlansSection() {
               </h3>
 
               <div className="mt-4 space-y-3 border-b border-current/10 pb-4">
-                <div className="flex min-w-0 items-baseline justify-between gap-2">
-                  <span className={`shrink-0 text-xs uppercase tracking-wide ${plan.destaque ? "text-white/70" : "text-body/70"}`}>
+                <div>
+                  <span className={`text-xs uppercase tracking-wide ${plan.destaque ? "text-white/70" : "text-body/70"}`}>
                     Implantação
                   </span>
-                  <span className={`truncate text-sm font-semibold ${plan.destaque ? "text-white" : "text-title"}`}>
+                  <p className={`text-sm font-semibold ${plan.destaque ? "text-white" : "text-title"}`}>
                     {currency.format(plan.implantacao)}
-                  </span>
+                  </p>
                 </div>
                 <div>
                   <span className={`text-xs uppercase tracking-wide ${plan.destaque ? "text-white/70" : "text-body/70"}`}>
@@ -95,6 +96,17 @@ export default function PlansSection() {
               >
                 Falar no WhatsApp
               </a>
+              <Link
+                href={`/planos/${plan.id}`}
+                className={`mt-3 inline-flex items-center justify-center gap-1 rounded-full px-5 py-2 text-sm font-medium transition-colors ${
+                  plan.destaque
+                    ? "text-white/80 hover:text-white"
+                    : "text-primary hover:text-primary-dark"
+                }`}
+              >
+                Ver detalhes
+                <span aria-hidden="true">→</span>
+              </Link>
             </div>
             </Reveal>
           ))}

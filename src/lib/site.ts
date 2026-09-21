@@ -11,16 +11,31 @@ export function whatsappLink(message: string) {
 }
 
 export const NAV_LINKS = [
-  { label: "Início", href: "#inicio" },
-  { label: "Como funciona", href: "#como-funciona" },
-  { label: "Planos", href: "#planos" },
-  { label: "FAQ", href: "#faq" },
-  { label: "Contato", href: "#contato" },
+  { label: "Início", href: "/#inicio" },
+  { label: "Como funciona", href: "/#como-funciona" },
+  { label: "Planos", href: "/#planos" },
+  { label: "FAQ", href: "/#faq" },
+  { label: "Contato", href: "/#contato" },
 ];
+
+export type PlanLimits = {
+  pessoas: number;
+  fotos: number;
+  albuns: number;
+  historias: number;
+  eventos: number;
+  livros: number;
+  capitulos: number;
+  documentos: number;
+  videos: number;
+  locais: number;
+  fontes: number;
+};
 
 export type Plan = {
   id: string;
   name: string;
+  tagline: string;
   implantacao: number;
   manutencao: number | null;
   manutencaoLabel: string;
@@ -31,12 +46,14 @@ export type Plan = {
   suporte: string;
   destaque?: boolean;
   featureList: string[];
+  limits: PlanLimits;
 };
 
 export const PLANS: Plan[] = [
   {
     id: "autonoma",
     name: "Entrega Autônoma",
+    tagline: "Para quem quer independência total, sem mensalidade.",
     implantacao: 1800,
     manutencao: 0,
     manutencaoLabel: "Sem manutenção",
@@ -51,10 +68,24 @@ export const PLANS: Plan[] = [
       "1 hora de treinamento",
       "Você administra tudo sozinho",
     ],
+    limits: {
+      pessoas: 100,
+      fotos: 300,
+      albuns: 10,
+      historias: 20,
+      eventos: 200,
+      livros: 1,
+      capitulos: 50,
+      documentos: 10,
+      videos: 10,
+      locais: 50,
+      fontes: 50,
+    },
   },
   {
     id: "essencial",
     name: "Legado Essencial",
+    tagline: "O básico com domínio próprio e suporte, sem complicação.",
     implantacao: 1800,
     manutencao: 360,
     manutencaoLabel: "/ano",
@@ -69,10 +100,24 @@ export const PLANS: Plan[] = [
       "Suporte via WhatsApp",
       "Atualizações automáticas",
     ],
+    limits: {
+      pessoas: 100,
+      fotos: 300,
+      albuns: 10,
+      historias: 20,
+      eventos: 200,
+      livros: 1,
+      capitulos: 50,
+      documentos: 10,
+      videos: 10,
+      locais: 50,
+      fontes: 50,
+    },
   },
   {
     id: "familia",
     name: "Legado Família",
+    tagline: "Mais espaço e atendimento prioritário para famílias médias.",
     implantacao: 1800,
     manutencao: 480,
     manutencaoLabel: "/ano",
@@ -88,10 +133,24 @@ export const PLANS: Plan[] = [
       "Resposta prioritária",
       "Ideal para famílias médias",
     ],
+    limits: {
+      pessoas: 200,
+      fotos: 600,
+      albuns: 20,
+      historias: 40,
+      eventos: 400,
+      livros: 2,
+      capitulos: 100,
+      documentos: 25,
+      videos: 25,
+      locais: 100,
+      fontes: 100,
+    },
   },
   {
     id: "ampliado",
     name: "Legado Ampliado",
+    tagline: "Famílias grandes, com genealogia mais complexa.",
     implantacao: 1800,
     manutencao: 720,
     manutencaoLabel: "/ano",
@@ -106,10 +165,24 @@ export const PLANS: Plan[] = [
       "Pequenas intervenções técnicas",
       "Treinamento adicional incluído",
     ],
+    limits: {
+      pessoas: 500,
+      fotos: 1200,
+      albuns: 40,
+      historias: 100,
+      eventos: 800,
+      livros: 5,
+      capitulos: 300,
+      documentos: 50,
+      videos: 50,
+      locais: 250,
+      fontes: 250,
+    },
   },
   {
     id: "historico",
     name: "Legado Histórico",
+    tagline: "Capacidade máxima para acervos genealógicos grandes.",
     implantacao: 1800,
     manutencao: 1020,
     manutencaoLabel: "/ano",
@@ -124,7 +197,34 @@ export const PLANS: Plan[] = [
       "Acompanhamento próximo e contínuo",
       "Ideal para acervos genealógicos grandes",
     ],
+    limits: {
+      pessoas: 1000,
+      fotos: 2000,
+      albuns: 80,
+      historias: 200,
+      eventos: 1500,
+      livros: 10,
+      capitulos: 600,
+      documentos: 100,
+      videos: 100,
+      locais: 500,
+      fontes: 500,
+    },
   },
+];
+
+export const LIMIT_ROWS: { key: keyof PlanLimits; label: string }[] = [
+  { key: "pessoas", label: "Pessoas" },
+  { key: "fotos", label: "Fotos" },
+  { key: "albuns", label: "Álbuns" },
+  { key: "historias", label: "Histórias" },
+  { key: "eventos", label: "Eventos históricos" },
+  { key: "livros", label: "Livros" },
+  { key: "capitulos", label: "Capítulos" },
+  { key: "documentos", label: "Documentos/arquivos" },
+  { key: "videos", label: "Vídeos (links externos)" },
+  { key: "locais", label: "Locais" },
+  { key: "fontes", label: "Fontes bibliográficas" },
 ];
 
 export const FAQ_ITEMS = [
