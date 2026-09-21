@@ -8,7 +8,7 @@ const currency = new Intl.NumberFormat("pt-BR", {
 
 export default function PlansSection() {
   return (
-    <section id="planos" className="py-20">
+    <section id="planos" className="py-16 sm:py-20">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold text-title sm:text-4xl">Escolha o plano certo para sua família</h2>
@@ -18,7 +18,13 @@ export default function PlansSection() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-5">
+        <div className="mx-auto mt-6 max-w-xl rounded-2xl border border-secondary/30 bg-secondary-light px-5 py-3 text-center text-sm text-body">
+          <span className="font-semibold text-title">Não sabe qual escolher?</span> Comece pelo{" "}
+          <strong className="text-primary">Legado Família</strong> — dá para fazer upgrade a
+          qualquer momento se sua família crescer.
+        </div>
+
+        <div className="mt-10 grid gap-6 lg:grid-cols-5">
           {PLANS.map((plan) => (
             <div
               key={plan.id}
@@ -39,51 +45,44 @@ export default function PlansSection() {
                 {plan.name}
               </h3>
 
-              <div className="mt-4">
-                <p className={`text-3xl font-bold ${plan.destaque ? "text-white" : "text-title"}`}>
-                  {plan.manutencao === 0 ? currency.format(1800) : currency.format(plan.manutencao ?? 0)}
-                </p>
-                <p className={`text-sm ${plan.destaque ? "text-white/80" : "text-body"}`}>
-                  {plan.manutencao === 0 ? "implantação única" : `${plan.manutencaoLabel} + implantação de ${currency.format(1800)}`}
-                </p>
+              <div className="mt-4 space-y-1.5 border-b border-current/10 pb-4">
+                <div className="flex items-baseline justify-between gap-2">
+                  <span className={`text-xs uppercase tracking-wide ${plan.destaque ? "text-white/70" : "text-body/70"}`}>
+                    Implantação
+                  </span>
+                  <span className={`text-sm font-semibold ${plan.destaque ? "text-white" : "text-title"}`}>
+                    {currency.format(plan.implantacao)}
+                  </span>
+                </div>
+                <div className="flex items-baseline justify-between gap-2">
+                  <span className={`text-xs uppercase tracking-wide ${plan.destaque ? "text-white/70" : "text-body/70"}`}>
+                    Manutenção
+                  </span>
+                  <span className={`text-2xl font-bold ${plan.destaque ? "text-white" : "text-title"}`}>
+                    {plan.manutencao === 0 ? "R$ 0" : `${currency.format(plan.manutencao ?? 0)}/ano`}
+                  </span>
+                </div>
               </div>
 
-              <ul className="mt-6 flex-1 space-y-3 text-sm">
-                <li className={plan.destaque ? "text-white/90" : "text-body"}>{plan.pessoas}</li>
-                <li className={plan.destaque ? "text-white/90" : "text-body"}>{plan.fotos}</li>
-                <li className={plan.destaque ? "text-white/90" : "text-body"}>{plan.livros}</li>
+              <ul className="mt-4 flex-1 space-y-2 text-sm">
+                <li className={plan.destaque ? "text-white/90" : "text-body"}>{plan.pessoas} · {plan.fotos}</li>
                 <li className={plan.destaque ? "text-white/90" : "text-body"}>
                   {plan.dominio ? "Domínio incluído" : "Sem domínio"}
                 </li>
                 <li className={plan.destaque ? "text-white/90" : "text-body"}>{plan.suporte}</li>
-                <li className="pt-2">
-                  <ul className="space-y-1.5">
-                    {plan.featureList.map((f) => (
-                      <li
-                        key={f}
-                        className={`flex items-start gap-2 text-sm ${plan.destaque ? "text-white" : "text-body"}`}
-                      >
-                        <span
-                          className={`mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full ${plan.destaque ? "bg-white" : "bg-secondary"}`}
-                        />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                </li>
               </ul>
 
               <a
                 href={whatsappLink(`Olá! Tenho interesse no plano ${plan.name} do Legado Digital.`)}
                 target="_blank"
                 rel="noreferrer"
-                className={`mt-6 inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition-colors ${
+                className={`mt-6 inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
                   plan.destaque
-                    ? "bg-white text-primary hover:bg-white/90"
-                    : "bg-primary text-white hover:bg-primary-dark"
+                    ? "bg-white text-primary hover:bg-white/90 focus-visible:outline-white"
+                    : "bg-primary text-white hover:bg-primary-dark focus-visible:outline-primary"
                 }`}
               >
-                Escolher plano
+                Falar no WhatsApp
               </a>
             </div>
           ))}

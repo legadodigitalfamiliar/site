@@ -14,7 +14,7 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-body transition-colors hover:text-primary"
+              className="rounded text-sm font-medium text-body transition-colors hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               {link.label}
             </Link>
@@ -25,9 +25,9 @@ export default function Header() {
           href={whatsappLink("Olá! Quero saber mais sobre o Legado Digital.")}
           target="_blank"
           rel="noreferrer"
-          className="hidden rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark md:inline-block"
+          className="inline-flex items-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:px-5 sm:py-2.5"
         >
-          Agendar demo
+          Falar no WhatsApp
         </a>
       </div>
     </header>

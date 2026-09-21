@@ -25,7 +25,7 @@ const SCREENS = [
 
 export default function DemoSection() {
   return (
-    <section className="bg-white py-20">
+    <section className="bg-white py-16 sm:py-20">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold text-title sm:text-4xl">Veja como funciona</h2>
@@ -41,7 +41,7 @@ export default function DemoSection() {
               key={screen.label}
               className="overflow-hidden rounded-2xl border border-border bg-paper"
             >
-              <div className="relative h-56 w-full">
+              <div className="relative h-56 w-full bg-primary/5">
                 <Image
                   src={screen.image}
                   alt={screen.label}

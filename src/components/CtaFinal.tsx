@@ -17,15 +17,15 @@ export default function CtaFinal() {
             href={whatsappLink("Olá! Quero começar a preservar a história da minha família.")}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center justify-center rounded-full bg-secondary px-7 py-3.5 text-base font-semibold text-white transition-transform hover:-translate-y-0.5 hover:bg-secondary/90"
+            className="inline-flex items-center justify-center rounded-full bg-secondary px-7 py-3.5 text-base font-semibold text-white transition-transform hover:-translate-y-0.5 hover:bg-secondary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
-            Fale conosco no WhatsApp
+            Falar no WhatsApp
           </a>
           <a
             href={whatsappLink("Olá! Gostaria de agendar uma demonstração do Legado Digital.")}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center justify-center rounded-full bg-white px-7 py-3.5 text-base font-semibold text-primary transition-transform hover:-translate-y-0.5 hover:bg-white/90"
+            className="inline-flex items-center justify-center rounded-full bg-white px-7 py-3.5 text-base font-semibold text-primary transition-transform hover:-translate-y-0.5 hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             Agendar demonstração
           </a>

@@ -1,4 +1,4 @@
-import { NAV_LINKS, SITE } from "@/lib/site";
+import { NAV_LINKS, SITE, whatsappLink } from "@/lib/site";
 
 export default function Footer() {
   return (
@@ -30,8 +30,21 @@ export default function Footer() {
         <div>
           <p className="text-sm font-semibold uppercase tracking-wide text-paper/60">Contato</p>
           <ul className="mt-3 space-y-2 text-sm text-paper/80">
-            <li>{SITE.email}</li>
-            <li>WhatsApp: {SITE.whatsappDisplay}</li>
+            <li>
+              <a href={`mailto:${SITE.email}`} className="hover:text-white">
+                {SITE.email}
+              </a>
+            </li>
+            <li>
+              <a
+                href={whatsappLink("Olá! Quero saber mais sobre o Legado Digital.")}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-white"
+              >
+                WhatsApp: {SITE.whatsappDisplay}
+              </a>
+            </li>
           </ul>
         </div>
       </div>

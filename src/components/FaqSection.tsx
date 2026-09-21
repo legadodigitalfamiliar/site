@@ -7,7 +7,7 @@ export default function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="bg-white py-20">
+    <section id="faq" className="bg-white py-16 sm:py-20">
       <div className="mx-auto max-w-3xl px-6">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-title sm:text-4xl">Dúvidas? Temos as respostas</h2>
@@ -24,7 +24,7 @@ export default function FaqSection() {
                 <button
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
+                  className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
                   aria-expanded={isOpen}
                 >
                   <span className="font-medium text-title">{item.q}</span>
