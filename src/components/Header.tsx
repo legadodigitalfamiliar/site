@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { NAV_LINKS, SITE, whatsappLink } from "@/lib/site";
 
@@ -36,11 +37,22 @@ export default function Header() {
       >
         <Link
           href="/#inicio"
-          className={`font-display font-semibold text-title transition-all duration-300 hover:scale-105 ${
-            scrolled ? "text-base" : "text-lg"
-          }`}
+          className="flex items-center gap-2 transition-all duration-300 hover:scale-105"
         >
-          {SITE.name}
+          <Image
+            src="/brand/logo.webp"
+            alt=""
+            width={32}
+            height={32}
+            className={`transition-all duration-300 ${scrolled ? "h-7 w-7" : "h-8 w-8"}`}
+          />
+          <span
+            className={`font-display font-semibold text-title transition-all duration-300 ${
+              scrolled ? "text-base" : "text-lg"
+            }`}
+          >
+            {SITE.name}
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
