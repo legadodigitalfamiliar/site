@@ -46,7 +46,7 @@ const ITEMS = [
   {
     tag: "Seguro e protegido",
     title: "Seus dados protegidos e sob seu controle",
-    text: "Criptografia, backup automático e acesso restrito. Você decide exatamente quem vê o quê.",
+    text: "Criptografia e acesso restrito. Você decide exatamente quem vê o quê.",
     accent: "secondary",
     icon: (
       <svg viewBox="0 0 64 64" fill="none" className="h-16 w-16" aria-hidden="true">

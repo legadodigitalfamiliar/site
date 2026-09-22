@@ -243,7 +243,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Meus dados estão seguros?",
-    a: "Sim. Usamos criptografia em trânsito (HTTPS), banco de dados protegido, acesso restrito a quem você autorizar e backup automático. O backup próprio continua sendo recomendado.",
+    a: "Sim. Usamos criptografia em trânsito (HTTPS), banco de dados protegido e acesso restrito a quem você autorizar. Ainda assim, recomendamos fortemente que você mantenha uma cópia própria (backup) das suas fotos e documentos originais.",
   },
   {
     q: "Posso fazer upgrade depois?",
